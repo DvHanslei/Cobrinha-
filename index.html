@@ -18,5 +18,18 @@
   </head>
   <body>
     <canvas id= "jogo" width= "600" height= "600"></canvas>
- 
+ <script>
+   const canvas = document.getElementById("jogo");
+   const ctx = canvas.getContext("2d");
+
+   const TAM = 25;
+   const COLUNAS = canvas.width / TAM;
+   const LINHAS = canvas.heigth / TAM;
+
+   let cobra = [{x:5, y:5}, {x:4, y:5}, {x:3, y:5}];
+   let direcao = {x:1, y:0};
+   let comida = gerarComida();
+   let pontos = 0;
+   let rodando = true;
+ </script>
 </html>
