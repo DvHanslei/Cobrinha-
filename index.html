@@ -59,6 +59,50 @@
        if (cabeca.x === cobra[i].x && cabeca.y === cobra[i].y) return true;
      }
      return false;
+     function desenhar() {
+       ctx.fillStyle = "black";
+       ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+       ctx.fillStyle = "red;
+         ctx.fillOval(comida.x * TAM, comida.y * TAM, TAM, TAM);
+
+       for (let i = 0; i <cobra.length; i++) {
+         ctx.fillStyle = i === 0 ? "line" : "green";
+         ctx.fillRect(cobra[i].x * TAM, cobra[i].y * TAM, TAM, TAM);
+       }
+       ctx.fillStyle = "white";
+       ctx.font = "20px Arial";
+       ctx.fillText("Pontos: " + pontos, 10, 20);
+       if (!rodando) {
+         ctx.fillStyle = "yellow";
+         ctx.font = "bolt 40px Arial";
+         ctx.fillText("GAME OVER!", 150, 300);
+         ctx.font = "20px Arial";
+         ctx.fillText("Enter para Recomeçar", 170, 340);
+       }
+     }
+     function loop() {
+       mover();
+       if (verificarColisao()) {
+         rodando = false;
+       }
+       desenhar();
+       if (rodando) setTimeout(loop, 150);
+     }
+     document.addEventListener("keydown", function(e) {
+       if (e.key === "ArrowUp" && direcao.y !== 1) direcao = {x:0, y:-1};
+       if (e.key === "ArrowDown" && direcao.y !== -1) direcao = {x:0, y:1};
+       if (e.key === "ArrowLeft" && direcao.x !== 1) direcao = {x:-1, y:0};
+       if (e.key === "ArrowRight" && direcao.x !==-1) direcao = {x:1, y:0};
+       if (e.key === "Enter" && !rodando) {
+         cobra = [{x:5, y:5}, {x:4, y:5}, {x:3, y:5}];
+         direcao = {x:1, y:0};
+         comida = gerarComida();
+         pontos = 0;
+         rodando = true;
+         loop();
+       }
+     });
    }
  </script>
 </html>
