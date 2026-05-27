@@ -31,11 +31,25 @@
             gap: 5px;
             margin-top: 15px;
         }
+        #btnReiniciar {
+            margin-top: 10px;
+            background: #222;
+            color: white;
+            border: 2px solid green;
+            border-radius: 8px;
+            font-size: 18px;
+            padding: 10px 30px;
+            cursor: pointer;
+            touch-action: manipulation;
+            display: none;
+        }
+        #btnReiniciar:active { background: green; }
     </style>
 </head>
 <body>
     <canvas id="jogo" width="400" height="400"></canvas>
     <div id="controles"></div>
+    <button id="btnReiniciar">REINICIAR</button>
     <script>
         const canvas = document.getElementById("jogo");
         const ctx = canvas.getContext("2d");
@@ -45,11 +59,17 @@
 
         let cobra = [{x:5,y:5},{x:4,y:5},{x:3,y:5}];
         let direcao = {x:1,y:0};
+        let proximaDirecao = {x:1,y:0};
         let comida = gerarComida();
         let pontos = 0;
         let rodando = true;
 
-        // Cria botões pelo JavaScript
+        document.getElementById("btnReiniciar").addEventListener("click", reiniciar);
+        document.getElementById("btnReiniciar").addEventListener("touchstart", function(e) {
+            e.preventDefault();
+            reiniciar();
+        });
+
         const controles = document.getElementById("controles");
         const botoes = [
             {label:"", dx:0, dy:0},
@@ -80,8 +100,12 @@
         });
 
         function ir(dx, dy) {
-            if (dx === 0 && direcao.y !== dy) direcao = {x:dx, y:dy};
-            if (dy === 0 && direcao.x !== dx) direcao = {x:dx, y:dy};
+            // Impede voltar na direção oposta
+            if (dx === 1 && direcao.x === -1) return;
+            if (dx === -1 && direcao.x === 1) return;
+            if (dy === 1 && direcao.y === -1) return;
+            if (dy === -1 && direcao.y === 1) return;
+            proximaDirecao = {x:dx, y:dy};
         }
 
         function gerarComida() {
@@ -92,6 +116,7 @@
         }
 
         function mover() {
+            direcao = proximaDirecao;
             let cabeca = {
                 x: cobra[0].x + direcao.x,
                 y: cobra[0].y + direcao.y
@@ -109,7 +134,8 @@
             let cabeca = cobra[0];
             if (cabeca.x < 0 || cabeca.x >= COLUNAS) return true;
             if (cabeca.y < 0 || cabeca.y >= LINHAS) return true;
-            for (let i = 1; i < cobra.length; i++) {
+            // Colisão com ela mesma só a partir do 3o segmento
+            for (let i = 3; i < cobra.length; i++) {
                 if (cabeca.x === cobra[i].x && cabeca.y === cobra[i].y) return true;
             }
             return false;
@@ -128,20 +154,26 @@
             ctx.font = "20px Arial";
             ctx.fillText("Pontos: " + pontos, 10, 20);
             if (!rodando) {
+                ctx.fillStyle = "rgba(0,0,0,0.6)";
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
                 ctx.fillStyle = "yellow";
                 ctx.font = "bold 30px Arial";
-                ctx.fillText("GAME OVER!", 80, 200);
+                ctx.fillText("GAME OVER!", 80, 180);
+                ctx.fillStyle = "white";
                 ctx.font = "18px Arial";
-                ctx.fillText("Toque ENTER para reiniciar", 60, 240);
+                ctx.fillText("Pontos: " + pontos, 160, 220);
+                document.getElementById("btnReiniciar").style.display = "block";
             }
         }
 
         function reiniciar() {
             cobra = [{x:5,y:5},{x:4,y:5},{x:3,y:5}];
             direcao = {x:1,y:0};
+            proximaDirecao = {x:1,y:0};
             comida = gerarComida();
             pontos = 0;
             rodando = true;
+            document.getElementById("btnReiniciar").style.display = "none";
             loop();
         }
 
