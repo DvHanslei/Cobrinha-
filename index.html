@@ -6,45 +6,22 @@
         body {
             background-color: black;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
         }
-        canvas { border: 2px solid green; }
-        #controles {
-            display: grid;
-            grid-template-columns: repeat(3, 70px);
-            grid-template-rows: repeat(2, 70px);
-            gap: 5px;
-            margin-top: 15px;
-        }
-        #controles button {
-            background: #222;
-            color: white;
+        canvas {
             border: 2px solid green;
-            border-radius: 8px;
-            font-size: 28px;
-            cursor: pointer;
-            touch-action: manipulation;
         }
-        #controles button:active { background: green; }
     </style>
 </head>
 <body>
-    <canvas id="jogo" width="400" height="400"></canvas>
-    <div id="controles">
-        <div></div>
-       <button onclick="ir(0,-1)">CIMA</button>
-<button onclick="ir(-1,0)">ESQ</button>
-<button onclick="ir(0,1)">BAIXO</button>
-<button onclick="ir(1,0)">DIR</button>
-    </div>
+    <canvas id="jogo" width="600" height="600"></canvas>
     <script>
         const canvas = document.getElementById("jogo");
         const ctx = canvas.getContext("2d");
-        const TAM = 20;
+        const TAM = 25;
         const COLUNAS = canvas.width / TAM;
         const LINHAS = canvas.height / TAM;
 
@@ -53,11 +30,6 @@
         let comida = gerarComida();
         let pontos = 0;
         let rodando = true;
-
-        function ir(dx, dy) {
-            if (dx === 0 && direcao.y !== dy) direcao = {x:dx, y:dy};
-            if (dy === 0 && direcao.x !== dx) direcao = {x:dx, y:dy};
-        }
 
         function gerarComida() {
             return {
@@ -104,18 +76,38 @@
             ctx.fillText("Pontos: " + pontos, 10, 20);
             if (!rodando) {
                 ctx.fillStyle = "yellow";
-                ctx.font = "bold 30px Arial";
-                ctx.fillText("GAME OVER!", 80, 200);
-                ctx.font = "18px Arial";
-                ctx.fillText("Toque em reiniciar!", 90, 240);
+                ctx.font = "bold 40px Arial";
+                ctx.fillText("GAME OVER!", 150, 300);
+                ctx.font = "20px Arial";
+                ctx.fillText("Enter para reiniciar", 170, 340);
             }
         }
 
-        function reiniciar() {
-            cobra = [{x:5,y:5},{x:4,y:5},{x:3,y:5}];
-            direcao = {x:1,y:0};
-            comida = gerarComida();
-            pontos = 0;
-            rodando = true;
-            loop();
+        function loop() {
+            mover();
+            if (verificarColisao()) {
+                rodando = false;
+            }
+            desenhar();
+            if (rodando) setTimeout(loop, 150);
         }
+
+        document.addEventListener("keydown", function(e) {
+            if (e.key === "ArrowUp" && direcao.y !== 1) direcao = {x:0,y:-1};
+            if (e.key === "ArrowDown" && direcao.y !== -1) direcao = {x:0,y:1};
+            if (e.key === "ArrowLeft" && direcao.x !== 1) direcao = {x:-1,y:0};
+            if (e.key === "ArrowRight" && direcao.x !== -1) direcao = {x:1,y:0};
+            if (e.key === "Enter" && !rodando) {
+                cobra = [{x:5,y:5},{x:4,y:5},{x:3,y:5}];
+                direcao = {x:1,y:0};
+                comida = gerarComida();
+                pontos = 0;
+                rodando = true;
+                loop();
+            }
+        });
+
+        loop();
+    </script>
+</body>
+</html>
