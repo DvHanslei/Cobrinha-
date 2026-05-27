@@ -6,6 +6,7 @@
         body {
             background-color: black;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
@@ -14,14 +15,40 @@
         canvas {
             border: 2px solid green;
         }
+        #controles {
+            display: grid;
+            grid-template-columns: repeat(3, 60px);
+            grid-template-rows: repeat(2, 60px);
+            gap: 5px;
+            margin-top: 15px;
+        }
+        #controles button {
+            background: #222;
+            color: white;
+            border: 2px solid green;
+            border-radius: 8px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        #controles button:active {
+            background: green;
+        }
     </style>
 </head>
 <body>
-    <canvas id="jogo" width="600" height="600"></canvas>
+    <canvas id="jogo" width="400" height="400"></canvas>
+    <div id="controles">
+        <div></div>
+        <button id="cima">⬆️</button>
+        <div></div>
+        <button id="esquerda">⬅️</button>
+        <button id="baixo">⬇️</button>
+        <button id="direita">➡️</button>
+    </div>
     <script>
         const canvas = document.getElementById("jogo");
         const ctx = canvas.getContext("2d");
-        const TAM = 25;
+        const TAM = 20;
         const COLUNAS = canvas.width / TAM;
         const LINHAS = canvas.height / TAM;
 
@@ -76,10 +103,10 @@
             ctx.fillText("Pontos: " + pontos, 10, 20);
             if (!rodando) {
                 ctx.fillStyle = "yellow";
-                ctx.font = "bold 40px Arial";
-                ctx.fillText("GAME OVER!", 150, 300);
-                ctx.font = "20px Arial";
-                ctx.fillText("Enter para reiniciar", 170, 340);
+                ctx.font = "bold 30px Arial";
+                ctx.fillText("GAME OVER!", 80, 200);
+                ctx.font = "18px Arial";
+                ctx.fillText("Toque em reiniciar!", 90, 240);
             }
         }
 
@@ -97,14 +124,36 @@
             if (e.key === "ArrowDown" && direcao.y !== -1) direcao = {x:0,y:1};
             if (e.key === "ArrowLeft" && direcao.x !== 1) direcao = {x:-1,y:0};
             if (e.key === "ArrowRight" && direcao.x !== -1) direcao = {x:1,y:0};
-            if (e.key === "Enter" && !rodando) {
-                cobra = [{x:5,y:5},{x:4,y:5},{x:3,y:5}];
-                direcao = {x:1,y:0};
-                comida = gerarComida();
-                pontos = 0;
-                rodando = true;
-                loop();
-            }
+            if (e.key === "Enter" && !rodando) reiniciar();
+        });
+
+        function reiniciar() {
+            cobra = [{x:5,y:5},{x:4,y:5},{x:3,y:5}];
+            direcao = {x:1,y:0};
+            comida = gerarComida();
+            pontos = 0;
+            rodando = true;
+            loop();
+        }
+
+        document.getElementById("cima").addEventListener("touchstart", function(e) {
+            e.preventDefault();
+            if (direcao.y !== 1) direcao = {x:0,y:-1};
+        });
+        document.getElementById("baixo").addEventListener("touchstart", function(e) {
+            e.preventDefault();
+            if (direcao.y !== -1) direcao = {x:0,y:1};
+        });
+        document.getElementById("esquerda").addEventListener("touchstart", function(e) {
+            e.preventDefault();
+            if (direcao.x !== 1) direcao = {x:-1,y:0};
+        });
+        document.getElementById("direita").addEventListener("touchstart", function(e) {
+            e.preventDefault();
+            if (direcao.x !== -1) direcao = {x:1,y:0};
+        });
+        document.getElementById("baixo").addEventListener("click", function() {
+            if (!rodando) reiniciar();
         });
 
         loop();
