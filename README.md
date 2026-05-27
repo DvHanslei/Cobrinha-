@@ -8,7 +8,7 @@
         background-color: black;
         display: flex;
         justify-content: center;
-        aling-items: center;
+        align-items: center;
         height: 100vh;
         margin: 0;
         }
@@ -19,6 +19,5 @@
   </head>
   <body>
     <canvas id= "jogo" width= "600" height= "600"></canvas>
-    
-  </html>
+ 
 </html>
