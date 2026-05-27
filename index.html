@@ -24,7 +24,7 @@
 
    const TAM = 25;
    const COLUNAS = canvas.width / TAM;
-   const LINHAS = canvas.heigth / TAM;
+   const LINHAS = canvas.height / TAM;
 
    let cobra = [{x:5, y:5}, {x:4, y:5}, {x:3, y:5}];
    let direcao = {x:1, y:0};
@@ -34,7 +34,7 @@
    function gerarComida() {
      return{
        x: Math.floor(Math.random() * COLUNAS),
-       Y: Math.floor(Math.random() * LINHAS)
+       y: Math.floor(Math.random() * LINHAS)
      },
        }
    function mover() {
@@ -44,8 +44,9 @@
      },
        cobra.unshift(cabeca),
 
-       if (cabeca.x === comida.x && cabeca.y === comid.y) {
-       pontos++;]comida = gerarComida();
+       if (cabeca.x === comida.x && cabeca.y === comida.y) {
+       pontos++;
+       comida = gerarComida();
      } else {
        cobra.pop();
      }
