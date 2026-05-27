@@ -35,13 +35,13 @@
      return{
        x: Math.floor(Math.random() * COLUNAS),
        y: Math.floor(Math.random() * LINHAS)
-     },
+     }
        }
    function mover() {
      let cabeca = {
        x: cobra[0].x + direcao.x,
        y: cobra[0].y + direcao.y
-     },
+     }
        cobra.unshift(cabeca),
 
        if (cabeca.x === comida.x && cabeca.y === comida.y) {
