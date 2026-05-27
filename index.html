@@ -12,13 +12,11 @@
             height: 100vh;
             margin: 0;
         }
-        canvas {
-            border: 2px solid green;
-        }
+        canvas { border: 2px solid green; }
         #controles {
             display: grid;
-            grid-template-columns: repeat(3, 60px);
-            grid-template-rows: repeat(2, 60px);
+            grid-template-columns: repeat(3, 70px);
+            grid-template-rows: repeat(2, 70px);
             gap: 5px;
             margin-top: 15px;
         }
@@ -27,23 +25,22 @@
             color: white;
             border: 2px solid green;
             border-radius: 8px;
-            font-size: 24px;
+            font-size: 28px;
             cursor: pointer;
+            touch-action: manipulation;
         }
-        #controles button:active {
-            background: green;
-        }
+        #controles button:active { background: green; }
     </style>
 </head>
 <body>
     <canvas id="jogo" width="400" height="400"></canvas>
     <div id="controles">
         <div></div>
-        <button id="cima">⬆️</button>
+        <button onclick="ir(0,-1)">⬆️</button>
         <div></div>
-        <button id="esquerda">⬅️</button>
-        <button id="baixo">⬇️</button>
-        <button id="direita">➡️</button>
+        <button onclick="ir(-1,0)">⬅️</button>
+        <button onclick="ir(0,1)">⬇️</button>
+        <button onclick="ir(1,0)">➡️</button>
     </div>
     <script>
         const canvas = document.getElementById("jogo");
@@ -57,6 +54,11 @@
         let comida = gerarComida();
         let pontos = 0;
         let rodando = true;
+
+        function ir(dx, dy) {
+            if (dx === 0 && direcao.y !== dy) direcao = {x:dx, y:dy};
+            if (dy === 0 && direcao.x !== dx) direcao = {x:dx, y:dy};
+        }
 
         function gerarComida() {
             return {
@@ -110,23 +112,6 @@
             }
         }
 
-        function loop() {
-            mover();
-            if (verificarColisao()) {
-                rodando = false;
-            }
-            desenhar();
-            if (rodando) setTimeout(loop, 150);
-        }
-
-        document.addEventListener("keydown", function(e) {
-            if (e.key === "ArrowUp" && direcao.y !== 1) direcao = {x:0,y:-1};
-            if (e.key === "ArrowDown" && direcao.y !== -1) direcao = {x:0,y:1};
-            if (e.key === "ArrowLeft" && direcao.x !== 1) direcao = {x:-1,y:0};
-            if (e.key === "ArrowRight" && direcao.x !== -1) direcao = {x:1,y:0};
-            if (e.key === "Enter" && !rodando) reiniciar();
-        });
-
         function reiniciar() {
             cobra = [{x:5,y:5},{x:4,y:5},{x:3,y:5}];
             direcao = {x:1,y:0};
@@ -135,28 +120,3 @@
             rodando = true;
             loop();
         }
-
-        document.getElementById("cima").addEventListener("touchstart", function(e) {
-            e.preventDefault();
-            if (direcao.y !== 1) direcao = {x:0,y:-1};
-        });
-        document.getElementById("baixo").addEventListener("touchstart", function(e) {
-            e.preventDefault();
-            if (direcao.y !== -1) direcao = {x:0,y:1};
-        });
-        document.getElementById("esquerda").addEventListener("touchstart", function(e) {
-            e.preventDefault();
-            if (direcao.x !== 1) direcao = {x:-1,y:0};
-        });
-        document.getElementById("direita").addEventListener("touchstart", function(e) {
-            e.preventDefault();
-            if (direcao.x !== -1) direcao = {x:1,y:0};
-        });
-        document.getElementById("baixo").addEventListener("click", function() {
-            if (!rodando) reiniciar();
-        });
-
-        loop();
-    </script>
-</body>
-</html>
