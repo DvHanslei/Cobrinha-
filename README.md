@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Cobrinha</title><title>
+    <title>Cobrinha</title>
     <style>
       body {
         background-color: black;
